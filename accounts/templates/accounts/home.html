@@ -5,30 +5,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>{% block title %}MyAssist{% endblock %}</title>
     <!-- Bootstrap CSS -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
 </head>
 
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="jumbotron">
-                    <h2>Hello, world!</h2>
-                    <p>This is a template for a simple marketing or informational website. It includes a large callout
-                        called the hero unit and three supporting pieces of content. Use it as a starting point to
-                        create something more unique.</p>
-                    <p>
-                        <a class="btn btn-primary btn-lg" href="register">Register</a>
-                    </p>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card text-center shadow-sm border-light">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">{% block header %}Welcome to MyAssist – Your Day, Perfectly
+                            Planned!{% endblock %}</h2>
+                        <p class="card-text mb-4">
+                            {% block description %}
+                            Welcome to MyAssist, your personal scheduling assistant! Sign up today to effortlessly
+                            organize your meetings, tasks, and events. Stay on top of your schedule and never miss an
+                            important moment. Create your account now and start planning your day with ease!
+                            {% endblock %}
+                        </p>
+                        <a class="btn btn-primary btn-lg" href="{% url 'register' %}">Sign Up</a>
+                        <a class="btn btn-primary btn-lg" href="{% url 'login' %}">Log In</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Bootstrap JS and dependencies -->
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src=" {% static 'js/bootstrap.bundle.min.js' %}"></script>
 </body>
 
 </html>
