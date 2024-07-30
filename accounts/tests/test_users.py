@@ -17,3 +17,6 @@ def test_user_registration(client):
     assert response.url == reverse('home')
     # Verifique se o usuário foi criado no banco de dados
     assert User.objects.filter(email='testuser@example.com').exists()
+
+
+def

@@ -1,4 +1,5 @@
 # accounts/views.py
+from django.views.decorators.http import require_http_methods
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from .forms import CustomUserCreationForm
@@ -8,6 +9,7 @@ def home(request):
     return render(request, 'accounts/home.html')
 
 
+@require_http_methods(["GET", "POST"])
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -17,6 +19,7 @@ def register(request):
             return redirect('/success')
     else:
         form = CustomUserCreationForm()
+
     return render(request, 'accounts/register.html', {'form': form})
 
 
