@@ -14,9 +14,6 @@ def test_user_registration(client):
     # Espera-se redirecionamento após registro bem-sucedido
     assert response.status_code == 302
     # Verifique a URL de redirecionamento
-    assert response.url == reverse('home')
+    assert response.url == reverse('success')
     # Verifique se o usuário foi criado no banco de dados
     assert User.objects.filter(email='testuser@example.com').exists()
-
-
-def

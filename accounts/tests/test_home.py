@@ -17,3 +17,8 @@ def test_home_page_status_code(client):
 def test_login_link(resp):
     login_url = reverse('login')
     assert_contains(resp, f'href="{login_url}"')
+
+
+def test_register_link(resp):
+    signup_url = reverse('register')
+    assert_contains(resp, f'href="{signup_url}"')

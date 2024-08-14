@@ -8,6 +8,8 @@ django = "*"
 pytest = "*"
 pytest-django = "*"
 coverage = "*"
+model-bakery = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

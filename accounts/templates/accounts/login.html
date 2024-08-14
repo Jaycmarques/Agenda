@@ -18,7 +18,7 @@
                         <h4 class="card-title">Login</h4>
                     </div>
                     <div class="card-body">
-                        <form method="post">
+                        <form method="post" action="{% url 'login' %}">
                             {% csrf_token %}
                             <div class="form-group mb-3">
                                 <label for="id_email">Email address</label>

@@ -1,7 +1,7 @@
 # accounts/views.py
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from .forms import CustomUserCreationForm
 
 
@@ -16,7 +16,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('/success')
+            return redirect('success')
     else:
         form = CustomUserCreationForm()
 
@@ -27,7 +27,14 @@ def success(request):
     return render(request, 'accounts/success.html')
 
 
-def log_in(request):
+def login_view(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')  # Redireciona para a página home
     return render(request, 'accounts/login.html')
 
 
