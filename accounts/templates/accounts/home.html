@@ -12,26 +12,61 @@
 <body>
     <div class="container py-5">
         <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6">
+            <div class="col-md-10 col-lg-8">
                 <div class="card text-center shadow-sm border-light">
-                    <div class="card-body">
-                        <h2 class="card-title mb-4">{% block header %}Welcome to MyAssist – Your Day, Perfectly
-                            Planned!{% endblock %}</h2>
+                    <div class="card-body p-4">
+                        <h2 class="card-title mb-4">{% block header %}Contacts{% endblock %}</h2>
                         <p class="card-text mb-4">
                             {% block description %}
-                            Welcome to MyAssist, your personal scheduling assistant! Sign up today to effortlessly
-                            organize your meetings, tasks, and events. Stay on top of your schedule and never miss an
-                            important moment. Create your account now and start planning your day with ease!
-                            {% endblock %}
+
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-sm">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th class="text-nowrap">ID</th>
+                                        <th class="text-nowrap">First Name</th>
+                                        <th class="text-nowrap">Last Name</th>
+                                        <th class="text-nowrap">Phone</th>
+                                        <th class="text-nowrap">E-mail</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for account in accounts %}
+                                    <tr>
+                                        <td class="text-truncate text-nowrap" style="max-width: 100px;">
+                                            <a href="{% url 'contact' contact_id=account.id %}"
+                                                class="text-primary text-decoration-none">
+                                                {{ account.id }}
+                                            </a>
+                                        </td>
+                                        <td class="text-truncate text-nowrap" style="max-width: 150px;">
+                                            {{ account.first_name }}
+                                        </td>
+                                        <td class="text-truncate text-nowrap" style="max-width: 150px;">
+                                            {{ account.last_name }}
+                                        </td>
+                                        <td class="text-truncate text-nowrap" style="max-width: 150px;">
+                                            {{ account.phone }}
+                                        </td>
+                                        <td class="text-truncate text-nowrap" style="max-width: 200px;">
+                                            {{ account.email }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {% endblock %}
                         </p>
-                        <a class="btn btn-primary btn-lg" href="{% url 'register' %}">Sign Up</a>
-                        <a class="btn btn-primary btn-lg" href="{% url 'login' %}">Log In</a>
+                        <a class="btn btn-primary btn-lg" href="{% url 'login' %}">Log Out</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src=" {% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 </body>
 
 </html>

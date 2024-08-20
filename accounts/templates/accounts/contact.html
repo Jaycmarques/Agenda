@@ -1,0 +1,32 @@
+{% extends "accounts/base.html" %}
+
+{% block title %}Contact Details{% endblock %}
+
+{% block header %}Contact Details{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border-light">
+                <div class="card-body p-4">
+                    {% if contact %}
+                    <h1 class="card-title mb-4">
+                        {{ contact.first_name }} {{ contact.last_name }}
+                    </h1>
+                    <p class="mb-2"><strong>ID:</strong> {{ contact.id }}</p>
+                    <p class="mb-2"><strong>E-mail:</strong> {{ contact.email }}</p>
+                    <p class="mb-2"><strong>Phone:</strong> {{ contact.phone }}</p>
+                    <p class="mb-2"><strong>Created Date:</strong> {{ contact.created_date }}</p>
+                    <p class="mb-2"><strong>Description:</strong> {{ contact.description }}</p>
+                    <p class="mb-2"><strong>Category:</strong> {{ contact.category.name }}</p>
+                    {% else %}
+                    <p>No contact information available.</p>
+                    {% endif %}
+                    <a class="btn btn-secondary btn-lg mt-4" href="{% url 'home' %}">Back to Contacts</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

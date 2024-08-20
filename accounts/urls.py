@@ -1,11 +1,13 @@
 from django.urls import path
-from .views import register, home, success, login_view
+from .views import register, home, success, login_view, index, contact
 from django.contrib.auth import views as auth_views
 
 # app_name = 'accounts'
 
 urlpatterns = [
-    path('', home, name='home'),
+    path('', index, name='index'),
+    path('home/', home, name='home'),
+    path('<int:contact_id>/', contact, name='contact'),
     path('register/', register, name='register'),
     path('success/', success, name='success'),
     path('login/', login_view, name='login'),

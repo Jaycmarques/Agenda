@@ -1,12 +1,31 @@
 # accounts/views.py
 from django.views.decorators.http import require_http_methods
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, authenticate
 from .forms import CustomUserCreationForm
+from accounts.models import Account
+
+
+def index(request):
+    return render(request, 'accounts/index.html')
 
 
 def home(request):
-    return render(request, 'accounts/home.html')
+    accounts = Account.objects.filter(show=True)
+
+    print(accounts.query)
+    context = {
+        'accounts': accounts,
+    }
+    return render(request, 'accounts/home.html', context)
+
+
+def contact(request, contact_id):
+    single_contact = get_object_or_404(Account, pk=contact_id, show=True)
+    context = {
+        'contact': single_contact,
+    }
+    return render(request, 'accounts/contact.html', context)
 
 
 @require_http_methods(["GET", "POST"])

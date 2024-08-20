@@ -19,7 +19,7 @@ from django.utils.translation import gettext
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
-from accounts.models import User, Account
+from accounts.models import User, Account, Category
 
 csrf_protect_m = method_decorator(csrf_protect)
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
@@ -216,11 +216,17 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
-    list_display = 'id', 'first_name', 'last_name', 'email', 'phone',
+    list_display = 'id', 'first_name', 'last_name', 'email', 'phone', 'category', 'show',
     ordering = '-id',
     list_filter = 'created_date',
     search_fields = 'id', 'first_name', 'last_name',
     list_per_page = 10
     list_max_show_all = 100
-    list_editable = 'phone',
+    list_editable = 'phone', 'show',
     list_display_links = 'first_name',
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = 'name',
+    ordering = '-id',

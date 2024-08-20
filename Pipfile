@@ -10,6 +10,8 @@ pytest-django = "*"
 coverage = "*"
 model-bakery = "*"
 python-dotenv = "*"
+pillow = "*"
+faker = "*"
 
 [dev-packages]
 

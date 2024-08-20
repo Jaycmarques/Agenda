@@ -83,7 +83,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def clean(self):
         super().clean()
-        self.email = self.__class__.objects.normalize_email(self.email)
+        self.email = self.__class__.objects.normalize_email(
+            self.email)  # type: ignore
 
     def get_full_name(self):
         """
@@ -105,6 +106,18 @@ class User(AbstractBaseUser, PermissionsMixin):
         super().save(*args, **kwargs)
 
 
+class Category(models.Model):
+
+    name = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categories'
+
+    def __str__(self):
+        return f'{self.name}'
+
+
 class Account(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50, blank=True)
@@ -112,6 +125,12 @@ class Account(models.Model):
     email = models.EmailField(max_length=254)
     created_date = models.DateTimeField(default=timezone.now)
     description = models.TextField(blank=True)
+    show = models.BooleanField(default=True)
+    picture = models.ImageField(blank=True, upload_to='pictures/%Y/%m/')
+    category = models.ForeignKey(
+        Category, on_delete=models.SET_NULL, blank=True, null=True)
+    owner = models.ForeignKey(
+        User, on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
