@@ -1,7 +1,7 @@
 # accounts/views.py
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from .forms import CustomUserCreationForm
 from accounts.models import Account
 
@@ -55,6 +55,11 @@ def login_view(request):
             login(request, user)
             return redirect('home')  # Redireciona para a página home
     return render(request, 'accounts/login.html')
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
 
 
 def password_reset(request):
