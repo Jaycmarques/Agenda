@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, authenticate, logout
 from .forms import CustomUserCreationForm
 from accounts.models import Account
+from django.db.models import Q
 
 
 def index(request):
@@ -12,6 +13,22 @@ def index(request):
 
 def home(request):
     accounts = Account.objects.filter(show=True)
+
+    print(accounts.query)
+    context = {
+        'accounts': accounts,
+    }
+    return render(request, 'accounts/home.html', context)
+
+
+def search(request):
+
+    search_value = request.GET.get('q', '').strip()
+    if search_value == '':
+        return redirect('home')
+
+    accounts = Account.objects.filter(show=True)\
+        .filter(Q(first_name__icontains=search_value) | Q(last_name__icontains=search_value))\
 
     print(accounts.query)
     context = {
