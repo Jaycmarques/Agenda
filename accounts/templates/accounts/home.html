@@ -19,7 +19,7 @@
         </thead>
 
         <tbody>
-            {% for account in accounts %}
+            {% for account in page_obj %}
             <tr>
                 <td class="text-truncate text-nowrap" style="max-width: 100px;">
                     <a href="{% url 'contact' contact_id=account.id %}" class="text-primary text-decoration-none">

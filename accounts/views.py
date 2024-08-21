@@ -5,6 +5,7 @@ from django.contrib.auth import login, authenticate, logout
 from .forms import CustomUserCreationForm
 from accounts.models import Account
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 
 def index(request):
@@ -13,10 +14,13 @@ def index(request):
 
 def home(request):
     accounts = Account.objects.filter(show=True)
+    paginator = Paginator(accounts, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
 
     print(accounts.query)
     context = {
-        'accounts': accounts,
+        'page_obj': page_obj,
     }
     return render(request, 'accounts/home.html', context)
 
@@ -28,11 +32,20 @@ def search(request):
         return redirect('home')
 
     accounts = Account.objects.filter(show=True)\
-        .filter(Q(first_name__icontains=search_value) | Q(last_name__icontains=search_value))\
+        .filter(
+            Q(first_name__icontains=search_value) |
+            Q(last_name__icontains=search_value) |
+            Q(email__icontains=search_value)
+
+    )\
+
+    paginator = Paginator(accounts, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
 
     print(accounts.query)
     context = {
-        'accounts': accounts,
+        'page_obj': page_obj,
     }
     return render(request, 'accounts/home.html', context)
 

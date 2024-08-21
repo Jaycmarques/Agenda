@@ -8,7 +8,7 @@
             <!-- Barra de Pesquisa -->
             <form class="d-flex justify-content-center mt-3" action="{% url 'search' %}" method="get">
                 <input class="form-control me-2 w-50" id="search" type="search" name="q" placeholder="Search"
-                    aria-label="Search">
+                    aria-label="Search" value="{{request.GET.q.strip}}">
                 <button class="btn btn-outline-primary" type="submit">Search</button>
             </form>
         </div>
