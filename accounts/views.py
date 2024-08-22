@@ -2,6 +2,8 @@
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, authenticate, logout
+
+from accounts.contact_forms import AccountForm
 from .forms import CustomUserCreationForm
 from accounts.models import Account
 from django.db.models import Q
@@ -94,3 +96,17 @@ def logout_view(request):
 
 def password_reset(request):
     return render(request, 'accounts/password_reset.html')
+
+
+def create(request):
+    if request.method == 'POST':
+        form = AccountForm(request.POST)
+        if form.is_valid():
+            # Se o formulário for válido, você pode salvar o objeto ou fazer outra coisa.
+            form.save()
+            # Redirecione para uma URL de sucesso ou página relevante
+            return redirect('success')
+    else:
+        form = AccountForm()
+
+    return render(request, 'accounts/create.html', {'form': form})

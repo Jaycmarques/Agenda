@@ -1,0 +1,44 @@
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="form-wrapper mx-auto p-4 border rounded" style="max-width: 500px;">
+        <h2 class="text-center mb-4">Create Account</h2>
+
+        <form action="{% url 'create' %}" method="POST">
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in field.errors %}
+                    <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <!-- Display non-field errors -->
+            {% if form.non_field_errors %}
+            <div class="mb-3">
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                    <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between mt-4">
+                <button class="btn btn-primary" type="submit">Submit</button>
+                <button class="btn btn-secondary" type="reset">Reset</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}
