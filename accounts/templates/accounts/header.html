@@ -4,7 +4,9 @@
         <div class="text-center">
             <a class="navbar-brand" href="{% url 'home' %}" style="text-decoration: none; color: inherit;">
                 <h1 class="mb-0">MyAssist</h1>
+
             </a>
+            <a href="{% url 'create' %}">Create</a>
             <!-- Barra de Pesquisa -->
             <form class="d-flex justify-content-center mt-3" action="{% url 'search' %}" method="get">
                 <input class="form-control me-2 w-50" id="search" type="search" name="q" placeholder="Search"

@@ -1,9 +1,10 @@
 # accounts/views.py
+from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, authenticate, logout
-
-from accounts.contact_forms import AccountForm
+from django.urls import reverse
+from accounts.forms import AccountForm
 from .forms import CustomUserCreationForm
 from accounts.models import Account
 from django.db.models import Q
@@ -102,11 +103,26 @@ def create(request):
     if request.method == 'POST':
         form = AccountForm(request.POST)
         if form.is_valid():
-            # Se o formulário for válido, você pode salvar o objeto ou fazer outra coisa.
-            form.save()
-            # Redirecione para uma URL de sucesso ou página relevante
-            return redirect('success')
+            contact = form.save()  # Salva o formulário e captura o objeto salvo
+            # Redireciona para a view de update com o ID do objeto recém-criado
+            return redirect('update', contact_id=contact.pk)
     else:
         form = AccountForm()
 
-    return render(request, 'accounts/create.html', {'form': form})
+    return render(request, 'accounts/create.html', {'form': form, 'form_action': reverse('create')})
+
+
+def update(request, contact_id):
+    contact = get_object_or_404(Account, pk=contact_id)
+    form_action = reverse('update', kwargs={'contact_id': contact_id})
+
+    if request.method == 'POST':
+        form = AccountForm(request.POST, instance=contact)
+        if form.is_valid():
+            form.save()
+            # Redireciona para a página de sucesso ou para onde desejar
+            return redirect('success')
+    else:
+        form = AccountForm(instance=contact)
+
+    return render(request, 'accounts/update.html', {'form': form, 'form_action': form_action})
