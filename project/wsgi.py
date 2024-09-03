@@ -8,9 +8,15 @@ https://docs.djangoproject.com/en/5.0/howto/deployment/wsgi/
 """
 
 import os
+import sys
 
 from django.core.wsgi import get_wsgi_application
 
+# Adicione o caminho do projeto ao sys.path
+sys.path.append('/home/jcmarques/jcmarques.pythonanywhere.com/project')
+
+# Configure o ambiente Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings')
 
+# Configure o aplicativo WSGI
 application = get_wsgi_application()
