@@ -83,8 +83,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def clean(self):
         super().clean()
-        self.email = self.__class__.objects.normalize_email(
-            self.email)  # type: ignore
+        self.email = self.__class__.objects.normalize_email(  # type: ignore
+            self.email)
 
     def get_full_name(self):
         """
