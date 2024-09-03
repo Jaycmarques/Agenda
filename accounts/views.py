@@ -9,12 +9,15 @@ from .forms import CustomUserCreationForm
 from accounts.models import Account
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
     return render(request, 'accounts/index.html')
 
 
+@login_required
 def home(request):
     accounts = Account.objects.filter(show=True)
     paginator = Paginator(accounts, 10)
@@ -28,6 +31,7 @@ def home(request):
     return render(request, 'accounts/home.html', context)
 
 
+@login_required
 def search(request):
 
     search_value = request.GET.get('q', '').strip()
@@ -53,6 +57,7 @@ def search(request):
     return render(request, 'accounts/home.html', context)
 
 
+@login_required
 def contact(request, contact_id):
     single_contact = get_object_or_404(Account, pk=contact_id, show=True)
     context = {
@@ -75,6 +80,7 @@ def register(request):
     return render(request, 'accounts/register.html', {'form': form})
 
 
+@login_required
 def success(request):
     return render(request, 'accounts/success.html')
 
@@ -87,6 +93,11 @@ def login_view(request):
         if user is not None:
             login(request, user)
             return redirect('home')  # Redireciona para a página home
+        else:
+            # Adiciona uma mensagem de erro se o login for inválido
+            messages.error(
+                request, "Invalid email or password. Please try again.")
+
     return render(request, 'accounts/login.html')
 
 
@@ -99,6 +110,7 @@ def password_reset(request):
     return render(request, 'accounts/password_reset.html')
 
 
+@login_required
 def create(request):
     if request.method == 'POST':
         form = AccountForm(request.POST, request.FILES)
@@ -120,6 +132,7 @@ def create(request):
     })
 
 
+@login_required
 def update(request, contact_id):
     contact = get_object_or_404(Account, pk=contact_id)
     form_action = reverse('update', kwargs={'contact_id': contact_id})
@@ -136,6 +149,7 @@ def update(request, contact_id):
     return render(request, 'accounts/update.html', {'form': form, 'form_action': form_action})
 
 
+@login_required
 def delete(request, contact_id):
     contact = get_object_or_404(Account, pk=contact_id)
 

@@ -35,6 +35,8 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 AUTH_USER_MODEL = 'accounts.User'
 
+LOGIN_URL = 'login'
+
 LOGIN_REDIRECT_URL = '/success/'
 
 LOGOUT_REDIRECT_URL = '/'
