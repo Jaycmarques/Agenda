@@ -101,15 +101,23 @@ def password_reset(request):
 
 def create(request):
     if request.method == 'POST':
-        form = AccountForm(request.POST)
-        if form.is_valid():
+        form = AccountForm(request.POST, request.FILES)
+        email = form.data.get('email')  # Obtém o email do formulário
+
+        # Verifica se já existe um contato com o mesmo e-mail
+        if Account.objects.filter(email=email).exists():
+            form.add_error('email', 'Já existe um contato com este e-mail.')
+        elif form.is_valid():
             contact = form.save()  # Salva o formulário e captura o objeto salvo
-            # Redireciona para a view de update com o ID do objeto recém-criado
             return redirect('update', contact_id=contact.pk)
     else:
         form = AccountForm()
 
-    return render(request, 'accounts/create.html', {'form': form, 'form_action': reverse('create')})
+    return render(request, 'accounts/create.html', {
+        'form': form,
+        'form_action': reverse('create'),
+        'is_update': False  # Indica que é uma criação, não uma atualização
+    })
 
 
 def update(request, contact_id):
@@ -117,12 +125,24 @@ def update(request, contact_id):
     form_action = reverse('update', kwargs={'contact_id': contact_id})
 
     if request.method == 'POST':
-        form = AccountForm(request.POST, instance=contact)
+        form = AccountForm(request.POST, request.FILES, instance=contact)
         if form.is_valid():
             form.save()
             # Redireciona para a página de sucesso ou para onde desejar
-            return redirect('success')
+            return redirect('contact', contact_id=contact.pk)
     else:
         form = AccountForm(instance=contact)
 
     return render(request, 'accounts/update.html', {'form': form, 'form_action': form_action})
+
+
+def delete(request, contact_id):
+    contact = get_object_or_404(Account, pk=contact_id)
+
+    if request.method == 'POST':
+        # Deleta o contato
+        contact.delete()
+        # Redireciona para a página desejada após a deleção
+        return redirect('home')
+
+    return render(request, 'accounts/contact.html', {'contact': contact})

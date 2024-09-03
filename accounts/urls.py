@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import register, home, success, login_view, index, contact, logout_view, search
 from django.contrib.auth import views as auth_views
-from .views import create, update
+from .views import create, update, delete
 
 # app_name = 'accounts'
 
@@ -18,5 +18,6 @@ urlpatterns = [
     path('contact/<int:contact_id>/detail/', contact, name='contact'),
     path('contact/create/', create, name='create'),
     path('contact/<int:contact_id>/update/', update, name='update'),
+    path('contact/<int:contact_id>/delete/', delete, name='delete'),
 
 ]

@@ -11,13 +11,19 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('email', 'first_name', 'password1', 'password2')
+        widgets = {
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'password1': forms.PasswordInput(attrs={'class': 'form-control'}),
+            'password2': forms.PasswordInput(attrs={'class': 'form-control'}),
+        }
 
 
 class AccountForm(forms.ModelForm):
     class Meta:
         model = Account
         fields = ['first_name', 'last_name', 'phone',
-                  'email', 'description', 'category']
+                  'email', 'description', 'category', 'picture']
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -25,6 +31,7 @@ class AccountForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
             'category': forms.Select(attrs={'class': 'form-control'}),
+            'picture': forms.FileInput(attrs={'class': 'form-control-file', 'accept': 'image/*'}),
         }
 
         help_texts = {
