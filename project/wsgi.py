@@ -13,7 +13,7 @@ import sys
 from django.core.wsgi import get_wsgi_application
 
 # Adicione o caminho do projeto ao sys.path
-sys.path.append('/home/jcmarques/jcmarques.pythonanywhere.com/project')
+sys.path.append('/home/jcmarques/jcmarques.pythonanywhere.com/')
 
 # Configure o ambiente Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings')
