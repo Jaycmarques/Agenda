@@ -12,6 +12,7 @@ model-bakery = "*"
 python-dotenv = "*"
 pillow = "*"
 faker = "*"
+python-decouple = "*"
 
 [dev-packages]
 

@@ -1,24 +1,30 @@
+# accounts/tests/test_views.py
+
 import pytest
 from django.urls import reverse
-from project.django_assertions import assert_contains
+from django.contrib.auth import get_user_model
 
 
-@pytest.fixture
-def resp(client, db):
-    resp = client.get(reverse('home'))
-    return resp
-
-
-def test_home_page_status_code(client):
-    response = client.get(reverse('home'))
+@pytest.mark.django_db
+def test_index_view(client):
+    response = client.get(reverse('index'))
     assert response.status_code == 200
+    assert 'Welcome' in response.content.decode()
 
 
-def test_login_link(resp):
-    login_url = reverse('login')
-    assert_contains(resp, f'href="{login_url}"')
+@pytest.mark.django_db
+def test_register_view(client):
+    # Envie uma solicitação POST para a página de registro com dados de teste
+    response = client.post(reverse('register'), data={
+        'email': 'newuser@example.com',
+        'first_name': 'New',
+        'password1': 'newpassword',
+        'password2': 'newpassword',
+    })
 
+    # Verifique se a resposta foi um redirecionamento, indicando sucesso
+    assert response.status_code == 302  # Código de status para redirecionamento
 
-def test_register_link(resp):
-    signup_url = reverse('register')
-    assert_contains(resp, f'href="{signup_url}"')
+    # Verifique se o usuário foi criado com sucesso
+    User = get_user_model()
+    assert User.objects.filter(email='newuser@example.com').exists()

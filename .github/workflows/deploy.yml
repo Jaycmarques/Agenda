@@ -1,0 +1,34 @@
+name: Deploy to PythonAnywhere
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+
+      - name: Install pipenv
+        run: pip install pipenv
+
+      - name: Install dependencies
+        run: |
+          pipenv install --dev
+
+      - name: Reload PythonAnywhere webapp
+        uses: jensvog/pythonanywhere-webapp-reload-action@v1
+        with:
+          host: www.pythonanywhere.com
+          username: jcmarques
+          api-token: ${{ secrets.PA_API_TOKEN }}
+          domain-name: jcmarques.pythonanywhere.com

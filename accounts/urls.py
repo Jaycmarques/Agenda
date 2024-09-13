@@ -1,9 +1,6 @@
 from django.urls import path
-from .views import register, home, success, login_view, index, contact, logout_view, search
+from .views import register, home, success, login_view, index, contact, logout_view, search, create, update, delete
 from django.contrib.auth import views as auth_views
-from .views import create, update, delete
-
-# app_name = 'accounts'
 
 urlpatterns = [
     path('', index, name='index'),
@@ -13,11 +10,19 @@ urlpatterns = [
     path('success/', success, name='success'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
+
+    # Password reset views
     path('password-reset/', auth_views.PasswordResetView.as_view(),
          name='password_reset'),
+    path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(),
+         name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(),
+         name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(),
+         name='password_reset_complete'),
+
     path('contact/<int:contact_id>/detail/', contact, name='contact'),
     path('contact/create/', create, name='create'),
     path('contact/<int:contact_id>/update/', update, name='update'),
     path('contact/<int:contact_id>/delete/', delete, name='delete'),
-
 ]
