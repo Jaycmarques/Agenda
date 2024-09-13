@@ -1,3 +1,5 @@
+{% if user.is_authenticated %}
+
 <!-- Cabeçalho com link e barra de pesquisa -->
 <header class="bg-light py-3">
     <div class="container">
@@ -6,7 +8,7 @@
                 <h1 class="mb-0">MyAssist</h1>
 
             </a>
-            <a href="{% url 'create' %}">Create</a>
+            <a href="{% url 'create' %}" class="text-decoration-none">Create</a>
             <!-- Barra de Pesquisa -->
             <form class="d-flex justify-content-center mt-3" action="{% url 'search' %}" method="get">
                 <input class="form-control me-2 w-50" id="search" type="search" name="q" placeholder="Search"
@@ -16,3 +18,4 @@
         </div>
     </div>
 </header>
+{% endif %}

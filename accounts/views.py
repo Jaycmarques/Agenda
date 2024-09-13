@@ -120,7 +120,10 @@ def create(request):
         if Account.objects.filter(email=email).exists():
             form.add_error('email', 'Já existe um contato com este e-mail.')
         elif form.is_valid():
-            contact = form.save()  # Salva o formulário e captura o objeto salvo
+            # Salva o formulário e captura o objeto salvo
+            contact = form.save(commit=False)
+            contact.owner = request.user
+            contact.save()
             return redirect('update', contact_id=contact.pk)
     else:
         form = AccountForm()
@@ -134,7 +137,7 @@ def create(request):
 
 @login_required
 def update(request, contact_id):
-    contact = get_object_or_404(Account, pk=contact_id)
+    contact = get_object_or_404(Account, pk=contact_id, owner=request.user)
     form_action = reverse('update', kwargs={'contact_id': contact_id})
 
     if request.method == 'POST':
@@ -151,7 +154,7 @@ def update(request, contact_id):
 
 @login_required
 def delete(request, contact_id):
-    contact = get_object_or_404(Account, pk=contact_id)
+    contact = get_object_or_404(Account, pk=contact_id, owner=request.user)
 
     if request.method == 'POST':
         # Deleta o contato
