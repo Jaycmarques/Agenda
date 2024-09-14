@@ -25,6 +25,10 @@ jobs:
         run: |
           pipenv install --dev
 
+      - name: Upload code to PythonAnywhere
+        run: |
+          scp -r . jcmarques@jcmarques.pythonanywhere.com:/home/jcmarques/project
+
       - name: Reload PythonAnywhere webapp
         uses: jensvog/pythonanywhere-webapp-reload-action@v1
         with:
