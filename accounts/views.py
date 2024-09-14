@@ -1,7 +1,7 @@
 # accounts/views.py
-from django.shortcuts import render, redirect
-from django.views.decorators.http import require_http_methods
+
 from django.shortcuts import get_object_or_404, render, redirect
+from django.views.decorators.http import require_http_methods
 from django.contrib.auth import login, authenticate, logout
 from django.urls import reverse
 from accounts.forms import AccountForm
@@ -11,6 +11,7 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from .decorators import unauthenticated_user
 
 
 def index(request):
@@ -19,12 +20,11 @@ def index(request):
 
 @login_required
 def home(request):
-    accounts = Account.objects.filter(show=True)
+    accounts = Account.objects.filter(owner=request.user, show=True)
     paginator = Paginator(accounts, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    print(accounts.query)
     context = {
         'page_obj': page_obj,
     }
@@ -33,24 +33,21 @@ def home(request):
 
 @login_required
 def search(request):
-
     search_value = request.GET.get('q', '').strip()
     if search_value == '':
         return redirect('home')
 
-    accounts = Account.objects.filter(show=True)\
+    accounts = Account.objects.filter(owner=request.user, show=True)\
         .filter(
             Q(first_name__icontains=search_value) |
             Q(last_name__icontains=search_value) |
             Q(email__icontains=search_value)
-
-    )\
+    )
 
     paginator = Paginator(accounts, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    print(accounts.query)
     context = {
         'page_obj': page_obj,
     }
@@ -59,13 +56,15 @@ def search(request):
 
 @login_required
 def contact(request, contact_id):
-    single_contact = get_object_or_404(Account, pk=contact_id, show=True)
+    single_contact = get_object_or_404(
+        Account, pk=contact_id, owner=request.user, show=True)
     context = {
         'contact': single_contact,
     }
     return render(request, 'accounts/contact.html', context)
 
 
+@unauthenticated_user
 @require_http_methods(["GET", "POST"])
 def register(request):
     if request.method == 'POST':
@@ -92,9 +91,8 @@ def login_view(request):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')  # Redireciona para a página home
+            return redirect('home')
         else:
-            # Adiciona uma mensagem de erro se o login for inválido
             messages.error(
                 request, "Invalid email or password. Please try again.")
 
@@ -116,11 +114,10 @@ def create(request):
         form = AccountForm(request.POST, request.FILES)
         email = form.data.get('email')  # Obtém o email do formulário
 
-        # Verifica se já existe um contato com o mesmo e-mail
-        if Account.objects.filter(email=email).exists():
+        # Verifica se já existe um contato com o mesmo e-mail do usuário atual
+        if Account.objects.filter(owner=request.user, email=email).exists():
             form.add_error('email', 'Já existe um contato com este e-mail.')
         elif form.is_valid():
-            # Salva o formulário e captura o objeto salvo
             contact = form.save(commit=False)
             contact.owner = request.user
             contact.save()
@@ -131,7 +128,7 @@ def create(request):
     return render(request, 'accounts/create.html', {
         'form': form,
         'form_action': reverse('create'),
-        'is_update': False  # Indica que é uma criação, não uma atualização
+        'is_update': False
     })
 
 
@@ -144,7 +141,6 @@ def update(request, contact_id):
         form = AccountForm(request.POST, request.FILES, instance=contact)
         if form.is_valid():
             form.save()
-            # Redireciona para a página de sucesso ou para onde desejar
             return redirect('contact', contact_id=contact.pk)
     else:
         form = AccountForm(instance=contact)
@@ -157,9 +153,7 @@ def delete(request, contact_id):
     contact = get_object_or_404(Account, pk=contact_id, owner=request.user)
 
     if request.method == 'POST':
-        # Deleta o contato
         contact.delete()
-        # Redireciona para a página desejada após a deleção
         return redirect('home')
 
     return render(request, 'accounts/contact.html', {'contact': contact})
