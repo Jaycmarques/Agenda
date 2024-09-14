@@ -84,6 +84,7 @@ def success(request):
     return render(request, 'accounts/success.html')
 
 
+@unauthenticated_user
 def login_view(request):
     if request.method == "POST":
         email = request.POST.get('email')
