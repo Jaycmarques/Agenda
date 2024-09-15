@@ -1,17 +1,22 @@
+from decouple import Config, RepositoryEnv
 import requests
+
+# Carregar variáveis do arquivo .env
+config = Config(RepositoryEnv('.env'))
 
 
 def send_email_via_mailgun():
-    # Substitua pela sua chave de API do Mailgun
-    api_key = '193b65e60846cc239961c2e4384d9993-826eddfb-2f4169a8'
-    # Substitua pelo seu domínio do Mailgun
-    domain = 'sandbox36a31b91602040b1b9aebbe6f256ea31.mailgun.org'
-    url = f'https://api.mailgun.net/v3/{domain}/messages'
+    # Obter variáveis do .env
+    api_key = config('MAILGUN_API_KEY')
+    domain = config('MAILGUN_DOMAIN')
+    from_email = config('MAILGUN_FROM_EMAIL')
+    to_email = config('MAILGUN_TO_EMAIL')
 
+    url = f'https://api.mailgun.net/v3/{domain}/messages'
     auth = ('api', api_key)
     data = {
-        'from': 'postmaster@sandbox36a31b91602040b1b9aebbe6f256ea31.mailgun.org',
-        'to': 'julio.jcmarques@gmail.com',  # Substitua pelo e-mail do destinatário
+        'from': from_email,
+        'to': to_email,
         'subject': 'Hello from Mailgun',
         'text': 'This is a test email sent using Mailgun API.'
     }
