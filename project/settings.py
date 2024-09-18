@@ -40,7 +40,7 @@ if not SECRET_KEY:
 DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1',
-                 'jcmarques.pythonanywhere.com', 'www.jcmarques.pythonanywhere.com']
+                 ]
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -151,7 +151,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR / 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-try:
-    from project.local_settings import *
-except ImportError:
-    pass
+# try:
+#     from project.local_settings import *
+# except ImportError:
+#     pass

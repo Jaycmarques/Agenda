@@ -37,7 +37,7 @@ Group=www-data
 Restart=on-failure
 # EnvironmentFile=/home/jcmarques/agendaapp/.env
 WorkingDirectory=/home/jcmarques/agendaapp
-# --error-logfile --enable-stdio-inheritance --log-level and --capture-output
+--error-logfile --enable-stdio-inheritance --log-level and --capture-output
 # are all for debugging purposes.
 ExecStart=/home/jcmarques/agendaapp/venv/bin/gunicorn \
           --error-logfile /home/jcmarques/agendaapp/gunicorn-error-log \
