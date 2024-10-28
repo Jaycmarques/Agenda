@@ -30,6 +30,7 @@ jobs:
     env:
       DJANGO_DEBUG: 'false'
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
     steps:
       - name: Checar o código do repositório
