@@ -8,31 +8,36 @@ from faker import Faker
 
 class AccountsViewsTest(TestCase):
     def test_home_view_function_is_correct(self):
-        view = resolve(reverse('accounts:home'))
+        view = resolve(reverse('home'))
         self.assertIs(view.func, views.home)
 
     def test_search_view_function_is_correct(self):
-        view = resolve(reverse('accounts:search'))
+        view = resolve(reverse('search'))
         self.assertIs(view.func, views.search)
 
     def test_contact_view_function_is_correct(self):
         view = resolve(
-            reverse('accounts:contact', kwargs={'contact_id': 1}))
+            reverse('contact', kwargs={'contact_id': 1}))
         self.assertIs(view.func, views.contact)
 
 
 @pytest.mark.django_db
-def test_index_view(client):
+def test_index_view_statuscode_ok(client):
     response = client.get(reverse('index'))
     assert response.status_code == 200
     assert 'Welcome' in response.content.decode()
+
+
+def test_index_view_loads_correct_template_ok(client):
+    response = client.get(reverse('index'))
+    assert 'accounts/index.html' in [t.name for t in response.templates]
 
 
 fake = Faker()
 
 
 @pytest.mark.django_db
-def test_register_view(client):
+def test_register_is_ok(client):
     # Generate a unique email
     email = fake.email()
     response = client.post(reverse('register'), data={
