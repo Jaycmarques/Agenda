@@ -15,43 +15,56 @@ jobs:
     services:
       postgres:
         image: postgres:13
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: test_db
         ports:
           - 5432:5432
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
         options: >-
-          --health-cmd pg_isready
+          --health-cmd "pg_isready -U test_user -d test_db"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
 
-    env:
-      DJANGO_DEBUG: 'false'
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
-      SECRET_KEY: 
-      SSECRET_KEY_ACTIONS: ${{ secrets.SECRET_KEY }}
-
     steps:
-      - name: Checar o código do repositório
+      - name: Check out the repository
         uses: actions/checkout@v3
 
-      - name: Configurar Python
-        uses: actions/setup-python@v2
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: Instalar dependências com pipenv
+      - name: Install dependencies
         run: |
-          pip install --upgrade pip
+          python -m pip install --upgrade pip
           pip install pipenv
           pipenv install --dev
+          cp contrib/env-sample .env  # Certifique-se de que este caminho é válido
 
-      - name: Executar migrações do banco de dados
+      - name: Set environment variables
+        run: |
+          echo "DJANGO_SETTINGS_MODULE=project.settings" >> $GITHUB_ENV
+          echo "DATABASE_URL=postgres://test_user:test_password@localhost:5432/test_db" >> $GITHUB_ENV
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
+
+      - name: Apply migrations
         run: |
           pipenv run python manage.py migrate
 
-      - name: Rodar os testes
+      - name: Run Django tests
         run: |
-          pipenv run python manage.py test
+          pipenv run python manage.py test  
+
+      - name: Run pytest with coverage
+        run: |
+          pipenv run pytest --cov=. --cov-report=xml
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.xml
+          flags: unittests
+          name: codecov-umbrella
