@@ -41,7 +41,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install pipenv
           pipenv install --dev
-          cp env-sample .env  # Certifique-se de que este caminho é válido
+          cp env_sample .env  # Certifique-se de que este caminho é válido
 
       - name: Set environment variables
         run: |
