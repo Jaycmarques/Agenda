@@ -4,6 +4,7 @@ from django.urls import reverse, resolve
 from accounts import views
 from django.contrib.auth import get_user_model
 from faker import Faker
+from accounts.models import Category, Account, User
 
 
 class AccountsViewsTest(TestCase):
