@@ -11,7 +11,7 @@ class AccountsModelTest(TestCase):
         self.user = get_user_model().objects.create_user(
             email="testuser@example.com",
             password="testpass123"
-        )
+        )  # type: ignore
         self.client.login(email="testuser@example.com", password="testpass123")
 
     def test_accounts_contact_creation_redirect_flow(self):
